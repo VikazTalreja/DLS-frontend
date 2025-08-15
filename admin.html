@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DLSStore Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-container { max-width: 960px; margin: 24px auto; padding: 16px; }
+    .admin-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row > * { margin: 4px 0; }
+    .grid { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; align-items: center; }
+    .muted { color: #666; font-size: 12px; }
+    .img-thumb { max-height: 64px; border: 1px solid #ddd; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h2>Admin</h2>
+    <div id="login-card" class="admin-card">
+      <div class="row">
+        <input id="admin-password" type="password" class="form-control" placeholder="Admin password" />
+        <button class="btn btn--primary" id="admin-login-btn">Login</button>
+      </div>
+      <div class="muted">On success, a session token is stored locally.</div>
+    </div>
+
+    <div id="bookings-card" class="admin-card" style="display:none;">
+      <div class="row">
+        <select id="filter-status" class="form-control" style="max-width:220px;">
+          <option value="">All statuses</option>
+          <option value="payment_pending">Payment pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="delivered">Delivered</option>
+        </select>
+        <button class="btn btn--secondary" id="refresh-btn">Refresh</button>
+      </div>
+      <div id="bookings-list" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.API_BASE_URL || 'http://localhost:4000';
+    const $ = (s) => document.querySelector(s);
+    const token = () => localStorage.getItem('adminToken');
+
+    function setLoggedInUI(on) {
+      $('#bookings-card').style.display = on ? '' : 'none';
+    }
+
+    $('#admin-login-btn').onclick = async () => {
+      const password = $('#admin-password').value.trim();
+      if (!password) { alert('Enter password'); return; }
+      const res = await fetch(API + '/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password }) });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('adminToken', data.token);
+        setLoggedInUI(true);
+        loadBookings();
+      } else { alert(data.error || 'Login failed'); }
+    };
+
+    $('#refresh-btn').onclick = () => loadBookings();
+    $('#filter-status').onchange = () => loadBookings();
+
+    async function loadBookings() {
+      const qs = $('#filter-status').value ? ('?status=' + encodeURIComponent($('#filter-status').value)) : '';
+      const res = await fetch(API + '/admin/bookings' + qs, { headers: { Authorization: 'Bearer ' + token() } });
+      const data = await res.json();
+      if (!data.items) { $('#bookings-list').textContent = 'Failed to load'; return; }
+      $('#bookings-list').innerHTML = data.items.map(b => `
+        <div class="admin-card">
+          <div class="grid">
+            <div>
+              <div><strong>${b.user?.name || 'Unknown'}</strong> <span class="muted">${b.user?.email || ''} ${b.user?.phone ? ' | ' + b.user.phone : ''}</span></div>
+              <div class="muted">Booking: ${b.id} • ${new Date(b.createdAt).toLocaleString()}</div>
+              <div>Product ID: ${b.productId} • Category: ${b.category}</div>
+              <div>MRP: ₹${Number(b.mrp).toLocaleString('en-IN')} • Booking: ₹${Number(b.bookingAmount).toLocaleString('en-IN')} • Balance: ₹${Number(b.balance).toLocaleString('en-IN')}</div>
+              <div>Status: <strong>${b.status}</strong> ${b.deliveryFree ? ' • ✅ Free delivery' : ''} ${b.referralCodeUsed ? ' • Ref by ' + b.referralCodeUsed : ''}</div>
+              ${b.transactionId ? `<div class="muted">UTR: ${b.transactionId}</div>` : ''}
+            </div>
+            <div>${b.paymentProofUrl ? `<a href="${API + b.paymentProofUrl}" target="_blank">View Proof</a>` : ''}</div>
+            <div><button class="btn btn--primary btn--sm" data-id="${b.id}" data-action="confirm">Confirm</button></div>
+            <div><button class="btn btn--secondary btn--sm" data-id="${b.id}" data-action="delivered">Mark Delivered</button></div>
+          </div>
+        </div>
+      `).join('');
+
+      $('#bookings-list').querySelectorAll('button[data-action]').forEach(btn => {
+        btn.onclick = async () => {
+          const id = btn.getAttribute('data-id');
+          const action = btn.getAttribute('data-action');
+          if (action === 'confirm') {
+            await fetch(API + '/admin/bookings/' + id + '/confirm', { method:'POST', headers: { Authorization: 'Bearer ' + token() } });
+          } else if (action === 'delivered') {
+            await fetch(API + '/admin/bookings/' + id + '/delivered', { method:'POST', headers: { Authorization: 'Bearer ' + token() } });
+          }
+          loadBookings();
+        };
+      });
+    }
+
+    // Auto-show if already logged in
+    if (token()) { setLoggedInUI(true); loadBookings(); }
+  </script>
+</body>
+</html>
+
+
