@@ -1,11 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { normalizeQuery } from "../_utils/url";
 
 export default function BookingSuccessPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 pb-16">Loading...</div>}>
+      <BookingSuccessContent />
+    </Suspense>
+  );
+}
+
+function BookingSuccessContent() {
   const sp = useSearchParams();
   const q = useMemo(() => normalizeQuery(sp), [sp]);
 
