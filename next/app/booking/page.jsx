@@ -1,11 +1,19 @@
 "use client";
 
-import { useMemo, useCallback, useState } from "react";
+import { useMemo, useCallback, useState, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useQueryUrl, useStepFlow, buildHref, normalizeQuery, mergeQuery } from "./_utils/url";
+// useSearchParams is not used directly here; it's consumed inside hooks in ./_utils/url
+import { useQueryUrl, useStepFlow, normalizeQuery, mergeQuery } from "./_utils/url";
 
 export default function BookingFlowPage() {
+  return (
+    <Suspense fallback={<div className="max-w-5xl mx-auto pt-8 sm:pt-16 lg:pt-20 px-4 pb-16">Loading...</div>}>
+      <BookingFlowContent />
+    </Suspense>
+  );
+}
+
+function BookingFlowContent() {
   const { step, query, next, prev, set, pathname } = useStepFlow({ initialStep: 1 });
   const { replace, push, goto, searchParams } = useQueryUrl();
   const initial = useMemo(() => normalizeQuery(searchParams), [searchParams]);

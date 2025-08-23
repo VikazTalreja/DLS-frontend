@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { normalizeQuery } from "../_utils/url";
 
 // This page renders a pixel-perfect error/cancelled state for the booking flow.
 // Data can be passed via URL, e.g. /booking/cancelled?bookingId=...&product=...&amount=10000&balance=25000&error=OTP%20failed
 export default function BookingCancelledPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 pb-16">Loading...</div>}>
+      <BookingCancelledContent />
+    </Suspense>
+  );
+}
+
+function BookingCancelledContent() {
   const sp = useSearchParams();
   const q = useMemo(() => normalizeQuery(sp), [sp]);
   const data = useMemo(() => {
