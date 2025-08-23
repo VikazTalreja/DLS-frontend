@@ -489,7 +489,7 @@ function renderEligibilityBanner() {
     banner.textContent = 'Login to see your free delivery eligibility.';
     return;
   }
-  fetch("https://dls-backend.onrender.com" + '/me/eligibility', {
+  fetch('https://dls-backend.onrender.com' + '/me/eligibility', {
     headers: { 'Authorization': 'Bearer ' + token }
   }).then(r=>r.json()).then(resp=>{
     if (resp.eligible) {
@@ -840,7 +840,7 @@ function completeBooking() {
       form.append('transactionId', currentBooking.transactionId || '');
       form.append('referrerCode', referrerCode);
       form.append('paymentProof', paymentProof);
-      fetch("https://dls-backend.onrender.com" + '/bookings', {
+      fetch('https://dls-backend.onrender.com' + '/bookings', {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + token },
         body: form
@@ -884,7 +884,7 @@ function generateReferralCode() {
 function updateReferralStats() {
   const token = localStorage.getItem('authToken');
   if (token) {
-    fetch("https://dls-backend.onrender.com" + '/me/referrals/progress', {
+    fetch('https://dls-backend.onrender.com' + '/me/referrals/progress', {
       headers: { 'Authorization': 'Bearer ' + token }
     }).then(r => r.json()).then(resp => {
       const statNumbers = document.querySelectorAll('.referral-stats .stat-number');
@@ -1008,7 +1008,7 @@ window.openLoginModal = function openLoginModal(){ openModal('login-modal'); };
 window.requestLoginOTP = function requestLoginOTP(){
   const email = document.getElementById('login-email')?.value?.trim();
   if (!email) { alert('Enter email'); return; }
-  fetch("https://dls-backend.onrender.com" + '/auth/request-otp', {
+  fetch('https://dls-backend.onrender.com' + '/auth/request-otp', {
     method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ email })
   }).then(r=>r.json()).then(resp=>{
     if(resp.ok){
@@ -1022,7 +1022,7 @@ window.verifyLoginOTP = function verifyLoginOTP(){
   const digits = document.querySelectorAll('#login-modal .otp-digit');
   const code = Array.from(digits).map(i=>i.value).join('');
   if(!email || !code){ alert('Enter email and OTP'); return; }
-  fetch("https://dls-backend.onrender.com" + '/auth/verify-otp', {
+  fetch('https://dls-backend.onrender.com' + '/auth/verify-otp', {
     method: 'POST', headers: { 'Content-Type':'application/json' }, body: JSON.stringify({ email, code })
   }).then(r=>r.json()).then(resp=>{
     if(resp.token){

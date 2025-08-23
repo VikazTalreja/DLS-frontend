@@ -1,0 +1,6 @@
+export default function OneIcon() {
+return (<svg width="630" height="294" viewBox="0 0 630 294" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1 0V143.5C1 156.203 11.2975 166.5 24 166.5H605C618.255 166.5 629 177.245 629 190.5V294" stroke="#0A58C9" stroke-dasharray="8 8"/>
+</svg>
+)
+}
