@@ -74,10 +74,10 @@ const HeroSection = () => {
             {currentSlide.headline[2]}
           </h1>
           <div className="mt-6 sm:mt-10 flex items-center space-x-3 sm:space-x-4">
-            <button className="bg-[#1e60c8] cursor-pointer text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors shadow-md">
+            <button onClick={() => router.push("/booking")} className="bg-[#1e60c8] cursor-pointer text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors shadow-md">
               Book Now
             </button>
-            <button className="border-2 border-[#1e60c8] cursor-pointer text-[#1e60c8] px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-50 transition-colors">
+            <button onClick={() => router.push("/referral-dashboard")} className="border-2 border-[#1e60c8] cursor-pointer text-[#1e60c8] px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-50 transition-colors">
               Refer & Earn
             </button>
           </div>
