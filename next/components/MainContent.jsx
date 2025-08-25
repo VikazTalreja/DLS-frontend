@@ -10,22 +10,22 @@ const buildSlides = (t) => ([
   {
     id: 1,
     headline: [t('hero.slides.1.h0'), t('hero.slides.1.h1'), t('hero.slides.1.h2')],
-    thumbnailPlaceholder: "bg-gray-600",
+    thumbnailPlaceholder:"bg-[url('/Frame9.png')]", 
   },
   {
     id: 2,
     headline: [t('hero.slides.2.h0'), t('hero.slides.2.h1'), t('hero.slides.2.h2')],
-    thumbnailPlaceholder: "bg-sky-600",
+    thumbnailPlaceholder:"bg-[url('/Frame10.png')]",
   },
   {
-    id: 3,
+    id: 3,  
     headline: [t('hero.slides.3.h0'), t('hero.slides.3.h1'), t('hero.slides.3.h2')],
-    thumbnailPlaceholder: "bg-slate-600",
+    thumbnailPlaceholder: "bg-[url('/Frame11.png')]",
   },
   {
     id: 4,
     headline: [t('hero.slides.4.h0'), t('hero.slides.4.h1'), t('hero.slides.4.h2')],
-    thumbnailPlaceholder: "bg-indigo-600",
+    thumbnailPlaceholder: "bg-[url('/Frame12.png')]",
   },
 ]);
 
@@ -94,10 +94,10 @@ const HeroSection = () => {
               <React.Fragment key={slide.id}>
                 <div
                   onClick={() => handleThumbnailClick(index)}
-                  className={`w-12 h-10 sm:w-16 sm:h-12 rounded-md cursor-pointer border-4 transition-all duration-300 ${activeIndex === index ? 'border-blue-600' : 'border-transparent'}`}
+                  className={`w-12 h-12 sm:w-16 sm:h-16 rounded-md cursor-pointer border-4 transition-all duration-300 ${activeIndex === index ? 'border-transparent' : 'border-transparent'}`}
                 >
                   {/* Using a simple colored div as the thumbnail */}
-                  <div className={`w-full h-full rounded-sm ${slide.thumbnailPlaceholder}`}></div>
+                  <div className={`w-full h-full bg-contain bg-center bg-no-repeat rounded-sm ${slide.thumbnailPlaceholder}`}></div>
                 </div>
                 {index < slideData.length - 1 && (
                   <div className="w-2 h-0.5 bg-gray-400"></div>
