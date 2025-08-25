@@ -1,0 +1,240 @@
+{
+  "brand": {
+    "title": "DLS ELECTRONICS",
+    "tagline": "Simple Life, Smart Life"
+  },
+  "nav": {
+    "booking": "Booking",
+    "referral": "Referral",
+    "contact": "Contact",
+    "about": "About",
+    "featured": "Featured",
+    "categories": "Categories"
+  },
+  "lang": {
+    "en": "English",
+    "mr": "Marathi"
+  },
+  "hero": {
+    "slides": {
+      "1": { "h0": "Your ", "h1": "Clothes", "h2": " Deserve the Best Wash." },
+      "2": { "h0": "Crisp, ", "h1": "Cool Air", "h2": " for a Perfect Summer." },
+      "3": { "h0": "Keep Your ", "h1": "Food Fresh", "h2": " for Days Longer." },
+      "4": { "h0": "Immersive ", "h1": "Viewing", "h2": " Like Never Before." }
+    }
+  },
+  "cta": {
+    "bookNow": "Book Now",
+    "referEarn": "Refer & Earn"
+  },
+  "footer": {
+    "companyNote": "A venture of DLS Agro Infraventure Pvt Ltd",
+    "quickLinks": {
+      "title": "Quick Links",
+      "items": {
+        "home": "Home",
+        "products": "Products",
+        "about": "About",
+        "contact": "Contact",
+        "referEarn": "Refer & Earn"
+      }
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms & Conditions",
+      "privacy": "Privacy Policy",
+      "refund": "Refund Policy"
+    },
+    "contact": {
+      "title": "Contact Info",
+      "labels": {
+        "phone": "[P]",
+        "email": "[E]",
+        "gst": "[G]"
+      }
+    },
+    "copy": " 2020 Lift Media. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "previous": "Previous",
+    "goBack": "Go back",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "booking": {
+    "title": "Book Your Product",
+    "subtitle": "Book with minimum amount and get free delivery through referrals",
+    "steps": {
+      "1": "Step 1: Product Selection",
+      "2": "Step 2: Personal Details",
+      "3": "Step 3: Terms & OTP Verification",
+      "4": "Step 4: Payment Instructions"
+    },
+    "fields": {
+      "category": "Choose Product Category",
+      "product": "Select Product",
+      "name": "Full Name",
+      "mobile": "Mobile Number",
+      "state": "State",
+      "address": "Complete Address",
+      "referral": "Referral Code (Optional)"
+    },
+    "placeholders": {
+      "category": "Select Category",
+      "product": "Select A Product",
+      "name": "Full Name",
+      "mobile": "Mobile Number",
+      "state": "State",
+      "address": "Complete Address",
+      "referral": "Referral Code (Optional)",
+      "enterHere": "Enter Here"
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "l1": "Booking amount is non-refundable after confirmation",
+      "l2": "Balance payment due within 45 days of booking",
+      "l3": "Free delivery applicable only through referral program completion",
+      "l4": "Products subject to availability",
+      "l5": "EMI options available on balance amount",
+      "l6": "Customer must accept terms via OTP for legal validity",
+      "accept": "I accept the terms and conditions"
+    },
+    "otp": {
+      "title": "OTP Verification",
+      "info": "We'll send an OTP to your mobile number for verification",
+      "send": "Send OTP",
+      "verify": "Verify OTP",
+      "sentDemo": "OTP sent (demo)",
+      "verifiedDemo": "OTP verified (demo)"
+    },
+    "actions": {
+      "nextEnterDetails": "Next: Enter Details",
+      "nextReview": "Next: Review & Confirm",
+      "nextPayment": "Next: Payment",
+      "complete": "Complete Booking",
+      "simulateFailure": "Simulate failure"
+    },
+    "payment": {
+      "amountToPay": "Amount to Pay:",
+      "options": "Payment Options",
+      "upi": "UPI Payment:",
+      "payToLabel": "Pay to:",
+      "bank": "Bank Transfer:",
+      "account": "Account:",
+      "accountNo": "Account No:",
+      "ifsc": "IFSC:",
+      "upload": "Upload Payment Screenshot",
+      "txn": "Transaction ID (optional)"
+    },
+    "price": {
+      "title": "Price Breakdown",
+      "mrp": "MRP:",
+      "bookingAmount": "Booking Amount:",
+      "balance": "Balance Payable:"
+    },
+    "errors": {
+      "generic": "Something went wrong"
+    }
+  },
+  "about": {
+    "title": "About DLS Electronics",
+    "description": "DLS Electronics is a venture of <strong class=\"font-semibold text-gray-800\">DLS Agro Infraventure Pvt Ltd</strong>, bringing you premium home appliances with innovative booking and referral solutions.",
+    "features": {
+      "trustedBrand": {
+        "title": "Trusted Brand",
+        "desc": "GST registered company with transparent business practices"
+      },
+      "freeDelivery": {
+        "title": "Free Delivery",
+        "desc": "Get free home delivery through our referral program"
+      },
+      "easyEmi": {
+        "title": "Easy EMI",
+        "desc": "Flexible payment options with low booking amounts"
+      }
+    }
+  },
+  "featured": {
+    "title": "Featured Products",
+    "subtitle": "Most popular items with best referral success rates.",
+    "bookFrom": "Book",
+    "products": {
+      "1": {
+        "title": "Samsung 43\" Smart LED TV",
+        "features": {
+          "uhd": "4K Ultra HD",
+          "smart": "Smart TV",
+          "hdr": "HDR Support",
+          "voice": "Voice Control"
+        }
+      },
+      "2": {
+        "title": "LG 1.5 Ton 5 Star Split AC",
+        "features": {
+          "fiveStar": "5 Star Rating",
+          "wifi": "Wi-Fi Enabled",
+          "inverter": "Dual Inverter"
+        }
+      },
+      "3": {
+        "title": "Whirlpool 265L Double Door",
+        "features": {
+          "frostFree": "Frost Free",
+          "energyEfficient": "Energy Efficient",
+          "vegetableCrisper": "Vegetable Crisper",
+          "ledLighting": "LED Lighting"
+        }
+      }
+    }
+  },
+  "categories": {
+    "title": "Shop Your Choice",
+    "subtitle": "Book with minimum amount and get free delivery through referrals",
+    "startingFrom": "Starting from",
+    "shopHere": "Shop Here"
+  },
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Get in touch for product inquiries and support.",
+    "items": {
+      "phoneSub": "Mon - Sat, 9AM - 8PM",
+      "emailSub": "24/7 Email Support",
+      "chat": "Chat Now",
+      "chatSub": "Quick responses",
+      "gst": "GST NUMBER"
+    },
+    "form": {
+      "name": "Your Name",
+      "phone": "Phone Number",
+      "message": "Message",
+      "submit": "Send Message"
+    }
+  },
+  "referral": {
+    "title": "Refer 3, Get Yours FREE!",
+    "subtitle": "Share with 3 friends and get your product FREE: simple, quick, and rewarding!",
+    "steps": {
+      "1": {
+        "title": "Book Your Product",
+        "desc": "Pay booking amount (₹8,000 - ₹12,000) for any product",
+        "alt": "Illustration of a person booking a product online."
+      },
+      "2": {
+        "title": "Share Your Code",
+        "desc": "Get unique referral code and share with friends via WhatsApp.",
+        "alt": "Illustration of sharing a referral code from a smartphone."
+      },
+      "3": {
+        "title": "Friends Book Too",
+        "desc": "When 3 friends book the same or higher-priced product, you qualify instantly.",
+        "alt": "Illustration showing a successful referral between two people."
+      },
+      "4": {
+        "title": "Enjoy FREE Delivery",
+        "desc": "Get your product delivered absolutely FREE within 5 working days!",
+        "alt": "Illustration of a person receiving a delivered product."
+      }
+    }
+  }
+}

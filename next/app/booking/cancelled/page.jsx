@@ -33,13 +33,13 @@ function BookingCancelledContent() {
   }, [q]);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-16">
+    <div className="max-w-4xl mx-auto pt-28 px-4 pb-16">
       <div className="mb-6 mt-3 inline-flex items-center gap-2 text-sm text-gray-600">
         <ArrowLeftIcon className="w-5 h-5" />
         <Link href={data.back} className="underline hover:text-gray-900">Go back</Link>
       </div>
 
-      <h1 className="text-3xl sm:text-4xl font-semibold text-center">Book Your Product</h1>
+    <h1 className="text-3xl sm:text-4xl font-semibold text-center">Book Your Product</h1>
       <p className="text-center text-gray-500 mt-1">Book with minimum amount and get free delivery through referrals</p>
 
       <div className="mt-8 bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-6 sm:p-8">

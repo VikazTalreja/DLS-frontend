@@ -1,6 +1,8 @@
+"use client";
 // components/ProductCategories.js
 
 import React from 'react';
+import { useI18n } from "@/i18n/I18nProvider";
 
 // A small SVG component for the arrow in the button.
 const ChevronRightIcon = () => (
@@ -48,7 +50,7 @@ const categoryData = [
 ];
 
 // Reusable Product Card Component
-const ProductCard = ({ title, price, bgImageStyle }) => (
+const ProductCard = ({ title, price, bgImageStyle, t, lang }) => (
   <div className="relative group rounded-2xl overflow-hidden shadow-lg cursor-pointer transform hover:scale-105 transition-transform duration-300 h-96">
     {/* Background Placeholder */}
     <div className={`absolute inset-0 w-full h-full ${bgImageStyle}`}></div>
@@ -63,7 +65,7 @@ const ProductCard = ({ title, price, bgImageStyle }) => (
       {/* Bottom price overlay */}
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
         <p className="text-white text-lg font-semibold">
-          Starting from {price}
+          {lang === 'mr' ? `${price} ${t('categories.startingFrom')}` : `${t('categories.startingFrom')} ${price}`}
         </p>
       </div>
     </div>
@@ -72,6 +74,7 @@ const ProductCard = ({ title, price, bgImageStyle }) => (
 
 
 const ProductCategories = () => {
+  const { t, lang } = useI18n();
   return (
     <section className="bg-white py-24 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,13 +83,13 @@ const ProductCategories = () => {
         <div className="text-center">
           <div className="relative inline-block">
              {/* The small blue square icon */}
-            <div className="absolute -top-1 -left-2 w-6 h-6 bg-blue-400/80 rounded-sm transform"></div>
+            <div className="absolute hidden md:block -top-1 -left-2 w-6 h-6 bg-blue-400/80 rounded-sm transform"></div>
             <h2 className="relative text-4xl font-extrabold text-gray-900">
-              Shop Your Choice
+              {t('categories.title')}
             </h2>
           </div>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-500">
-            Book with minimum amount and get free delivery through referrals
+            {t('categories.subtitle')}
           </p>
         </div>
 
@@ -98,6 +101,8 @@ const ProductCategories = () => {
               title={category.title}
               price={category.price}
               bgImageStyle={category.bgImageStyle} // Using the gradient style from data
+              t={t}
+              lang={lang}
             />
           ))}
         </div>
@@ -105,7 +110,7 @@ const ProductCategories = () => {
         {/* Shop Here Button */}
         <div className="mt-16 text-center">
           <button className="inline-flex cursor-pointer  items-center justify-center px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <span className='text-base mr-2'>Shop Here</span>
+            <span className='text-base mr-2'>{t('categories.shopHere')}</span>
             <ChevronRightIcon/>
           </button>
         </div>

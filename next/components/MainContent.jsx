@@ -2,35 +2,40 @@
 "use client"; // This is a client component because it uses state and effects
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useI18n } from '@/i18n/I18nProvider';
 
-// Updated data: We only need to change the text and the active thumbnail.
-// The main product image is now part of the static background.
-const slideData = [
+// slide data will read from i18n messages
+const buildSlides = (t) => ([
   {
     id: 1,
-    headline: ["Your ", "Clothes", " Deserve the Best Wash."],
+    headline: [t('hero.slides.1.h0'), t('hero.slides.1.h1'), t('hero.slides.1.h2')],
     thumbnailPlaceholder: "bg-gray-600",
   },
   {
     id: 2,
-    headline: ["Crisp, ", "Cool Air", " for a Perfect Summer."],
+    headline: [t('hero.slides.2.h0'), t('hero.slides.2.h1'), t('hero.slides.2.h2')],
     thumbnailPlaceholder: "bg-sky-600",
   },
   {
     id: 3,
-    headline: ["Keep Your ", "Food Fresh", " for Days Longer."],
+    headline: [t('hero.slides.3.h0'), t('hero.slides.3.h1'), t('hero.slides.3.h2')],
     thumbnailPlaceholder: "bg-slate-600",
   },
   {
     id: 4,
-    headline: ["Immersive ", "Viewing", " Like Never Before."],
+    headline: [t('hero.slides.4.h0'), t('hero.slides.4.h1'), t('hero.slides.4.h2')],
     thumbnailPlaceholder: "bg-indigo-600",
   },
-];
+]);
 
 const HeroSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const timeoutRef = useRef(null);
+  const router = useRouter();
+  const { t } = useI18n();
+
+  const slideData = buildSlides(t);
 
   const resetTimeout = () => {
     if (timeoutRef.current) {
@@ -51,7 +56,7 @@ const HeroSection = () => {
     return () => {
       resetTimeout();
     };
-  }, [activeIndex]);
+  }, [activeIndex, slideData.length]);
 
   const handleThumbnailClick = (index) => {
     setActiveIndex(index);
@@ -61,7 +66,7 @@ const HeroSection = () => {
 
   return (
     <section 
-      className="font-sans w-full min-h-[520px] sm:min-h-[600px] lg:h-screen bg-[url('/HeroBg.png')] bg-cover bg-center flex items-center pt-6 sm:pt-10"
+      className="font-sans w-full min-h-[560px] sm:min-h-[600px] lg:h-screen bg-[url('/HeroBg.png')] bg-cover bg-center flex items-center pt-6 sm:pt-10"
     >
       <div className="max-w-7xl mx-auto  w-full flex items-center justify-start h-full relative">
         <div className="max-w-2xl text-left">
@@ -75,10 +80,10 @@ const HeroSection = () => {
           </h1>
           <div className="mt-6 sm:mt-10 flex items-center space-x-3 sm:space-x-4">
             <button onClick={() => router.push("/booking")} className="bg-[#1e60c8] cursor-pointer text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors shadow-md">
-              Book Now
+              {t('cta.bookNow')}
             </button>
             <button onClick={() => router.push("/referral-dashboard")} className="border-2 border-[#1e60c8] cursor-pointer text-[#1e60c8] px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-50 transition-colors">
-              Refer & Earn
+              {t('cta.referEarn')}
             </button>
           </div>
 

@@ -39,7 +39,7 @@ function BookingSuccessContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-16">
+    <div className="max-w-4xl mx-auto px-4 pt-28 pb-16">
       <div className="mb-6 mt-3 inline-flex items-center gap-2 text-sm text-gray-600">
         <ArrowLeftIcon className="w-5 h-5" />
         <Link href={data.back} className="underline hover:text-gray-900">Go back</Link>

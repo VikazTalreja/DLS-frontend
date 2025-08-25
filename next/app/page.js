@@ -13,11 +13,13 @@ export default function HomePage() {
     <div className='flex flex-col gap-4'>
 
       <MainContent />
+      <div className="flex flex-col p-3">
       <ProductCategories />
       <FeaturedProducts />
       <ReferralSteps />
       <AboutSection />
       <ContactSection />
+      </div>
     </div>
   );
 }
