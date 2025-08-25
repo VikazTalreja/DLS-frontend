@@ -5,7 +5,7 @@ import Link from "next/link";
 // useSearchParams is not used directly here; it's consumed inside hooks in ./_utils/url
 import { useQueryUrl, useStepFlow, normalizeQuery, mergeQuery } from "./_utils/url";
 import { useI18n } from "@/i18n/I18nProvider";
-import { getToken } from "@/lib/clientAuth";
+import { getToken, getUser } from "@/lib/clientAuth";
 
 export default function BookingFlowPage() {
   const { t } = useI18n();
@@ -22,14 +22,42 @@ function BookingFlowContent() {
   const initial = useMemo(() => normalizeQuery(searchParams), [searchParams]);
   const { t } = useI18n();
   // Start with empty form; allow prefill from query params (e.g., when coming from Featured Products)
-  const [form, setForm] = useState({ ...initial });
+  const [form, setForm] = useState({ ...initial, otpVerified: false });
   const [paymentFile, setPaymentFile] = useState(null);
   const otpRefs = useRef([]);
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpError, setOtpError] = useState("");
 
-  // Update local form state only; URL updates happen on step change
+  // Simple catalog (could be fetched from API)
+  const productCatalog = useMemo(() => ({
+    "LG 1.5 Ton 5 Star Split AC": { mrp: 42000, bookingAmount: 12000 },
+    "Samsung 55\" 4K TV": { mrp: 55000, bookingAmount: 12000 },
+    "Whirlpool 300L Fridge": { mrp: 38000, bookingAmount: 10000 },
+  }), []);
+  const categories = ["AC", "TV", "Fridge", "Washing Machine"];
+  const productOptions = Object.keys(productCatalog);
+
   const setField = useCallback((key, value) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   }, []);
+
+  const onSelectProduct = useCallback((productName) => {
+    setForm((prev) => {
+      const next = { ...prev, product: productName };
+      const meta = productCatalog[productName];
+      if (meta) {
+        next.mrp = meta.mrp;
+        next.amount = meta.bookingAmount;
+        next.balance = Math.max(0, (meta.mrp || 0) - (meta.bookingAmount || 0));
+      } else {
+        next.mrp = undefined;
+        next.amount = undefined;
+        next.balance = undefined;
+      }
+      return next;
+    });
+  }, [productCatalog]);
 
   const goSuccess = useCallback(async () => {
     // Submit booking to API
@@ -99,10 +127,10 @@ function BookingFlowContent() {
           {step === 1 && (
             <div className="space-y-5">
               <Field label={t('booking.fields.category')}>
-                <Select value={form.category || ""} onChange={(v) => setField("category", v)} options={["AC", "TV", "Fridge", "Washing Machine"]} placeholder={t('booking.placeholders.category')} />
+                <Select value={form.category || ""} onChange={(v) => setField("category", v)} options={categories} placeholder={t('booking.placeholders.category')} />
               </Field>
               <Field label={t('booking.fields.product')}>
-                <Select value={form.product || ""} onChange={(v) => setField("product", v)} options={["LG 1.5 Ton 5 Star Split AC", "Samsung 55\" 4K TV", "Whirlpool 300L Fridge"]} placeholder={t('booking.placeholders.product')} />
+                <Select value={form.product || ""} onChange={onSelectProduct} options={productOptions} placeholder={t('booking.placeholders.product')} />
               </Field>
               <div className="pt-2 flex justify-end">
                 <Primary onClick={() => next(form)}>{t('booking.actions.nextEnterDetails')}</Primary>
@@ -156,10 +184,26 @@ function BookingFlowContent() {
                 <div className="text-sm font-medium text-gray-800">{t('booking.otp.title')}</div>
                 <p className="text-sm text-gray-500">{t('booking.otp.info')}</p>
                 <div className="mt-3 flex gap-3">
-                  <Secondary onClick={() => alert(t('booking.otp.sentDemo'))}>{t('booking.otp.send')}</Secondary>
+                  <Secondary onClick={async () => {
+                    setOtpError("");
+                    const user = getUser();
+                    if (!user?.email) { setOtpError('Please login first'); return; }
+                    try {
+                      setOtpSending(true);
+                      const res = await fetch('/api/auth/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email }) });
+                      const data = await res.json();
+                      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to send OTP');
+                    } catch (e) {
+                      setOtpError(e.message || 'Failed to send OTP');
+                    } finally {
+                      setOtpSending(false);
+                    }
+                  }}>
+                    {otpSending ? 'Sending…' : t('booking.otp.send')}
+                  </Secondary>
                 </div>
-                <div className="mt-3 grid grid-cols-4 gap-3 max-w-xs">
-                  {[0,1,2,3].map((i) => (
+                <div className="mt-3 grid grid-cols-6 gap-3 max-w-sm">
+                  {[0,1,2,3,4,5].map((i) => (
                     <input
                       key={i}
                       ref={(el) => (otpRefs.current[i] = el)}
@@ -170,7 +214,7 @@ function BookingFlowContent() {
                         val[i] = input || "";
                         const nextOtp = val.join("");
                         setField("otp", nextOtp);
-                        if (input && i < 3) {
+                        if (input && i < 5) {
                           otpRefs.current[i + 1]?.focus();
                         }
                       }}
@@ -185,18 +229,18 @@ function BookingFlowContent() {
                           }
                         }
                         if (e.key === "ArrowLeft" && i > 0) otpRefs.current[i - 1]?.focus();
-                        if (e.key === "ArrowRight" && i < 3) otpRefs.current[i + 1]?.focus();
+                        if (e.key === "ArrowRight" && i < 5) otpRefs.current[i + 1]?.focus();
                       }}
                       onPaste={(e) => {
                         const text = e.clipboardData.getData("text").replace(/\D/g, "");
                         if (!text) return;
                         e.preventDefault();
-                        const digits = text.slice(0, 4).split("");
-                        const val = ["", "", "", ""];
+                        const digits = text.slice(0, 6).split("");
+                        const val = ["", "", "", "", "", ""];
                         for (let j = 0; j < digits.length; j++) val[j] = digits[j];
                         const nextOtp = val.join("");
                         setField("otp", nextOtp);
-                        const focusIndex = Math.min(digits.length, 3);
+                        const focusIndex = Math.min(digits.length, 5);
                         otpRefs.current[focusIndex]?.focus();
                       }}
                       className="h-12 rounded-xl border border-gray-300 text-center text-lg"
@@ -206,14 +250,42 @@ function BookingFlowContent() {
                     />
                   ))}
                 </div>
+                {otpError && (<div className="mt-2 text-sm text-red-600">{otpError}</div>)}
                 <div className="mt-3">
-                  <Primary onClick={() => alert(t('booking.otp.verifiedDemo'))}>{t('booking.otp.verify')}</Primary>
+                  <Primary onClick={async () => {
+                    setOtpError("");
+                    const user = getUser();
+                    if (!user?.email) { setOtpError('Please login first'); return; }
+                    if (!form.otp || form.otp.length < 6) { setOtpError('Enter 6-digit OTP'); return; }
+                    try {
+                      setOtpVerifying(true);
+                      // Our auth verify-otp expects 6 digits; allow 4 by padding pattern or accept short
+                      const res = await fetch('/api/auth/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, code: form.otp }) });
+                      const data = await res.json();
+                      if (!res.ok || !data.ok) throw new Error(data.error || 'Invalid or expired OTP');
+                      // Persist session (login/refresh) if provided
+                      if (data.token && data.user) {
+                        // Avoid import cycle: call localStorage directly since clientAuth.setSession isn't imported here
+                        localStorage.setItem('authToken', data.token);
+                        localStorage.setItem('authUser', JSON.stringify(data.user));
+                      }
+                      setForm((prev)=> ({ ...prev, otpVerified: true }));
+                    } catch (e) {
+                      setOtpError(e.message || 'Failed to verify OTP');
+                    } finally {
+                      setOtpVerifying(false);
+                    }
+                  }}>
+                    {otpVerifying ? 'Verifying…' : t('booking.otp.verify')}
+                  </Primary>
                 </div>
               </div>
 
               <div className="pt-2 flex justify-between">
                 <Secondary onClick={() => prev(form)}>{t('common.previous')}</Secondary>
-                <Primary onClick={() => next(form)}>{t('booking.actions.nextPayment')}</Primary>
+                <Primary onClick={() => { if (form.terms === "1" && form.otpVerified) next(form); }}>
+                  {t('booking.actions.nextPayment')}
+                </Primary>
               </div>
             </div>
           )}
@@ -260,16 +332,18 @@ function BookingFlowContent() {
           )}
         </div>
 
-        {/* Right: Price breakdown */}
-        <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-6 sm:p-8 h-fit">
-          <h3 className="text-center font-semibold text-blue-700">{t('booking.price.title')}</h3>
-          <div className="mt-4 space-y-3 text-sm">
-            <Row label={`${t('booking.price.mrp')}`} value={`₹${Number(form.mrp || 35000).toLocaleString("en-IN")}`} />
-            <Row label={`${t('booking.price.bookingAmount')}`} value={`₹${Number(form.amount || 10000).toLocaleString("en-IN")}`} />
-            <div className="h-px bg-gray-200 my-3" />
-            <Row label={`${t('booking.price.balance')}`} value={`₹${Number(form.balance || 25000).toLocaleString("en-IN")}`} highlight />
+        {/* Right: Price breakdown (visible after product is selected) */}
+        {form.product && (
+          <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 p-6 sm:p-8 h-fit">
+            <h3 className="text-center font-semibold text-blue-700">{t('booking.price.title')}</h3>
+            <div className="mt-4 space-y-3 text-sm">
+              <Row label={`${t('booking.price.mrp')}`} value={`₹${Number(form.mrp || 0).toLocaleString("en-IN")}`} />
+              <Row label={`${t('booking.price.bookingAmount')}`} value={`₹${Number(form.amount || 0).toLocaleString("en-IN")}`} />
+              <div className="h-px bg-gray-200 my-3" />
+              <Row label={`${t('booking.price.balance')}`} value={`₹${Number(form.balance || 0).toLocaleString("en-IN")}`} highlight />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

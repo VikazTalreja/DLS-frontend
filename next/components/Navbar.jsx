@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useI18n } from '@/i18n/I18nProvider';
 import AuthModal from '@/components/AuthModal';
 import { getUser, clearSession } from '@/lib/clientAuth';
@@ -40,11 +41,30 @@ const CloseIcon = () => (
   </svg>
 );
 
+const InPageLink = ({ href, children, className, onNavigate }) => {
+  // href is expected like '#contact' or '#about'
+  const handleClick = (e) => {
+    const id = href.replace('#', '');
+    const el = document.getElementById(id);
+    if (el) {
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // update hash without reloading
+      history.replaceState(null, '', href);
+      if (onNavigate) onNavigate();
+    }
+  };
+  return (
+    <a href={href} onClick={handleClick} className={className}>{children}</a>
+  );
+};
+
 const Header = () => {
   const [open, setOpen] = useState(false);
   const { lang, setLang, t } = useI18n();
   const [authOpen, setAuthOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     setUser(getUser());
@@ -79,9 +99,23 @@ const Header = () => {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-[#1e60c8]">
+            {pathname === '/' ? (
+              <>
+                <InPageLink href="#home" className="hover:underline">{t('nav.home') || 'Home'}</InPageLink>
+                <InPageLink href="#products" className="hover:underline">{t('nav.products') || 'Products'}</InPageLink>
+                <InPageLink href="#about" className="hover:underline">{t('nav.about') || 'About'}</InPageLink>
+                <InPageLink href="#contact" className="hover:underline">{t('nav.contact')}</InPageLink>
+              </>
+            ) : (
+              <>
+                <Link href="/#home" className="hover:underline">{t('nav.home') || 'Home'}</Link>
+                <Link href="/#products" className="hover:underline">{t('nav.products') || 'Products'}</Link>
+                <Link href="/#about" className="hover:underline">{t('nav.about') || 'About'}</Link>
+                <Link href="/#contact" className="hover:underline">{t('nav.contact')}</Link>
+              </>
+            )}
             <Link href="/booking" className="hover:underline">{t('nav.booking')}</Link>
             <Link href="/referral-dashboard" className="hover:underline">{t('nav.referral')}</Link>
-            <Link href="#contact" className="hover:underline">{t('nav.contact')}</Link>
             {isAdminEmail && (
               <Link href="/admin/bookings" className="hover:underline">Admin</Link>
             )}
@@ -127,9 +161,23 @@ const Header = () => {
         >
           <div className="bg-white rounded-xl shadow p-4 border border-blue-100">
             <nav className="flex flex-col gap-3 text-[#1e60c8] font-medium">
+              {pathname === '/' ? (
+                <>
+                  <InPageLink href="#home" onNavigate={() => setOpen(false)} className="py-2">{t('nav.home') || 'Home'}</InPageLink>
+                  <InPageLink href="#products" onNavigate={() => setOpen(false)} className="py-2">{t('nav.products') || 'Products'}</InPageLink>
+                  <InPageLink href="#about" onNavigate={() => setOpen(false)} className="py-2">{t('nav.about') || 'About'}</InPageLink>
+                  <InPageLink href="#contact" onNavigate={() => setOpen(false)} className="py-2">{t('nav.contact')}</InPageLink>
+                </>
+              ) : (
+                <>
+                  <Link href="/#home" onClick={() => setOpen(false)} className="py-2">{t('nav.home') || 'Home'}</Link>
+                  <Link href="/#products" onClick={() => setOpen(false)} className="py-2">{t('nav.products') || 'Products'}</Link>
+                  <Link href="/#about" onClick={() => setOpen(false)} className="py-2">{t('nav.about') || 'About'}</Link>
+                  <Link href="/#contact" onClick={() => setOpen(false)} className="py-2">{t('nav.contact')}</Link>
+                </>
+              )}
               <Link href="/booking" onClick={() => setOpen(false)} className="py-2">{t('nav.booking')}</Link>
               <Link href="/referral-dashboard" onClick={() => setOpen(false)} className="py-2">{t('nav.referral')}</Link>
-              <a href="#contact" onClick={() => setOpen(false)} className="py-2">{t('nav.contact')}</a>
               {!user ? (
                 <button onClick={()=>{ setAuthOpen(true); setOpen(false); }} className="mt-2 px-3 py-2 rounded-lg bg-blue-600 text-white">{t('common.login') || 'Login'}</button>
               ) : (

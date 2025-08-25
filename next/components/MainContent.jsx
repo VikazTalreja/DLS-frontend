@@ -66,7 +66,8 @@ const HeroSection = () => {
 
   return (
     <section 
-      className="font-sans w-full min-h-[560px] sm:min-h-[600px] lg:h-screen bg-[url('/HeroBg.png')] bg-cover bg-center flex items-center pt-6 sm:pt-10"
+      id="home"
+      className="scroll-mt-28 font-sans w-full min-h-[560px] sm:min-h-[600px] lg:h-screen bg-[url('/HeroBg.png')] bg-cover bg-center flex items-center pt-6 sm:pt-10"
     >
       <div className="max-w-7xl mx-auto  w-full flex items-center justify-start h-full relative">
         <div className="max-w-2xl text-left">

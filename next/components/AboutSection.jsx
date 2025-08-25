@@ -25,7 +25,7 @@ const featuresData = (t) => [
 const AboutSection = () => {
   const { t } = useI18n();
   return (
-    <section className="bg-[#f8faff] py-24 font-sans">
+    <section id="about" className="scroll-mt-28 bg-[#f8faff] py-24 font-sans">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="text-center">

@@ -74,7 +74,7 @@ const FeaturedProducts = () => {
   const { t, lang } = useI18n();
   const router = useRouter();
   return (
-    <section className="bg-gray-50 py-24 font-sans">
+    <section id="products" className="scroll-mt-28 bg-gray-50 py-24 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center">
