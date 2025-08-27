@@ -20,9 +20,9 @@
   "hero": {
     "slides": {
       "1": { "h0": "Your ", "h1": "Clothes", "h2": " Deserve the Best Wash." },
-      "2": { "h0": "Crisp, ", "h1": "Cool Air", "h2": " for a Perfect Summer." },
-      "3": { "h0": "Keep Your ", "h1": "Food Fresh", "h2": " for Days Longer." },
-      "4": { "h0": "Immersive ", "h1": "Viewing", "h2": " Like Never Before." }
+      "2": { "h0": "Cool Comfort,", "h1": " Anytime You", "h2": " Need It." },
+      "3": { "h0": "Advanced ", "h1": "smart cooling", "h2": " for smarter kitchens." },
+      "4": { "h0": "Your ", "h1": "screen", "h2": " to endless entertainment." }
     }
   },
   "cta": {

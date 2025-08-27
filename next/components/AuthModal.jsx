@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
 import { setSession } from '@/lib/clientAuth';
+import { useI18n } from '@/i18n/I18nProvider';
 
 export default function AuthModal({ open, onClose, onLoggedIn }) {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ export default function AuthModal({ open, onClose, onLoggedIn }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const otpRefs = useRef([]);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (otpSent) {
@@ -80,46 +82,85 @@ export default function AuthModal({ open, onClose, onLoggedIn }) {
 
   return open ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl p-6 shadow-xl">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Login / Signup</h3>
-          <button className="text-gray-500" onClick={onClose}>✕</button>
-        </div>
-        <div className="mt-4 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="you@example.com" />
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="grid grid-cols-1 p-6 lg:grid-cols-2">
+          {/* Left: Hero Image with headline */}
+          <div className="relative min-h-[300px] lg:min-h-[560px] bg-[#eef5ff]">
+            <div className="absolute rounded-2xl inset-0 bg-cover bg-right" style={{ backgroundImage: "url('/HeroBg.png')" }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-white/10 to-transparent" />
+            <div className="relative h-full w-full p-6 sm:p-8 flex flex-col">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 max-w-xs">
+                Everyday basics,
+                <br />
+                made better
+              </h2>
+            </div>
+            {/* <button onClick={onClose} className="absolute top-3 right-3 rounded-full bg-white/80 hover:bg-white text-gray-700 w-9 h-9 flex items-center justify-center shadow">✕</button> */}
           </div>
 
-          {!otpSent ? (
-            <button disabled={loading || !email} onClick={requestOTP} className="w-full rounded-xl bg-blue-600 text-white py-2.5 font-medium disabled:opacity-60">
-              {loading ? 'Sending…' : 'Send OTP'}
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <div className="grid grid-cols-6 gap-2">
-                {digits.map((d, i) => (
-                  <input
-                    key={i}
-                    ref={(el) => (otpRefs.current[i] = el)}
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={d}
-                    onChange={(e) => setDigit(i, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(i, e)}
-                    onPaste={handlePaste}
-                    autoComplete="one-time-code"
-                    className="h-12 rounded-xl border border-gray-300 text-center text-lg"
-                  />
-                ))}
+          {/* Right: Brand + Form */}
+          <div className="flex items-center justify-center p-6 sm:p-10">
+            <div className="w-full max-w-md">
+              <div className="text-center mb-6">
+                <div className="text-[#1e60c8] font-extrabold tracking-wide text-lg">{t('brand.title')}</div>
+                <div className="text-[#1e60c8] text-xs opacity-80">{t('brand.tagline')}</div>
               </div>
-              <button disabled={loading} onClick={verifyOTP} className="w-full rounded-xl bg-blue-600 text-white py-2.5 font-medium disabled:opacity-60">
-                {loading ? 'Verifying…' : 'Verify OTP'}
-              </button>
-            </div>
-          )}
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+              <h3 className="text-xl font-semibold text-center text-gray-800">Sign In To Your Account</h3>
+              <p className="text-sm text-center text-gray-500 mb-6">Welcome to {t('brand.title')}</p>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Email</label>
+                  <input
+                    type="email"
+                    className="mt-1 w-full rounded-xl text-black border border-gray-300 px-4 py-3 focus:outline-none focus:border-[#1e60c8] focus:ring-2 focus:ring-[#1e60c8]/20"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                  />
+                </div>
+
+                {!otpSent ? (
+                  <button
+                    disabled={loading || !email}
+                    onClick={requestOTP}
+                    className="w-full rounded-xl bg-blue-600 cursor-pointer hover:bg-[#1e60c8] text-white py-3 font-semibold disabled:opacity-60 disabled:cursor-not-allowed shadow"
+                  >
+                    {loading ? 'Sending…' : 'Send OTP'}
+                  </button>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-6 gap-2">
+                      {digits.map((d, i) => (
+                        <input
+                          key={i}
+                          ref={(el) => (otpRefs.current[i] = el)}
+                          inputMode="numeric"
+                          maxLength={1}
+                          value={d}
+                          onChange={(e) => setDigit(i, e.target.value)}
+                          onKeyDown={(e) => handleKeyDown(i, e)}
+                          onPaste={handlePaste}
+                          autoComplete="one-time-code"
+                          className="h-12 text-black rounded-xl border border-gray-300 text-center text-lg focus:outline-none focus:border-[#1e60c8]"
+                        />
+                      ))}
+                    </div>
+                    <button
+                      disabled={loading}
+                      onClick={verifyOTP}
+                      className="w-full rounded-xl bg-blue-600 cursor-pointer hover:bg-[#1e60c8] text-white py-3 font-semibold disabled:opacity-60 disabled:cursor-not-allowed shadow"
+                    >
+                      {loading ? 'Verifying…' : 'Verify OTP'}
+                    </button>
+                  </div>
+                )}
+
+                {error && <p className="text-sm text-red-600">{error}</p>}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

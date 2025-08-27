@@ -10,10 +10,10 @@ import AboutSection from '../components/AboutSection';
 import ContactSection from '@/components/ContactSection';
 export default function HomePage() {
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col'>
 
       <MainContent />
-      <div className="flex flex-col p-3">
+      <div className="flex flex-col bg-white p-3">
       <ProductCategories />
       <FeaturedProducts />
       <ReferralSteps />
